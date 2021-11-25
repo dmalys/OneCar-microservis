@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "CarImageService.Proto";
+
+service GrpcCarImage {
+    rpc CheckCarImageExists (CheckCarImageRequest) returns (CheckCarImageResponse);
+}
+
+message CheckCarImageRequest {
+    int32 carImageId = 1;
+}
+
+message CheckCarImageResponse {
+    int32 exists = 1;
+}

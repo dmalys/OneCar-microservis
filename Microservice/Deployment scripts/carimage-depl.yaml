@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: carimage-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: carimageservice
+  template:
+    metadata:
+      labels:
+        app: carimageservice
+    spec:
+      containers:
+      - name: carimageservice
+        image: dam1591/carimageservice:latest
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: carimages-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: carimageservice
+  ports:
+  - name: carimageservice
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: carimagegrpc
+    protocol: TCP
+    port: 60003
+    targetPort: 60003

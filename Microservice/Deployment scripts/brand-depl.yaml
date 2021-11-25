@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: brand-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: brandservice
+  template:
+    metadata:
+      labels:
+        app: brandservice
+    spec:
+      containers:
+      - name: brandservice
+        image: dam1591/brandservice:latest
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: brands-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: brandservice
+  ports:
+  - name: brandservice
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: brandgrpc
+    protocol: TCP
+    port: 60000
+    targetPort: 60000

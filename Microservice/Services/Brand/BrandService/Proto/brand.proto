@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "BrandService.Proto";
+
+service GrpcBrand {
+    rpc CheckBrandExists (CheckBrandRequest) returns (CheckBrandResponse);
+}
+
+message CheckBrandRequest {
+    int32 brandId = 1;
+}
+
+message CheckBrandResponse {
+    int32 exists = 1;
+}

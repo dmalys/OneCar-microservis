@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "CarService.Proto";
+
+service GrpcCar {
+    rpc CheckCarExists (CheckCarRequest) returns (CheckCarResponse);
+    rpc NotifyDeleteCarEntity (NotifyDeleteCarRequest) returns (NotifyDeleteCarResponse);
+}
+
+message NotifyDeleteCarRequest {
+    repeated int32 carModelIds = 1 [packed=true];
+}
+
+message NotifyDeleteCarResponse {}
+
+message CheckCarRequest {
+    int32 carId = 1;
+}
+
+message CheckCarResponse {
+    int32 exists = 1;
+}

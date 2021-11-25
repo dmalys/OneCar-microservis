@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option csharp_namespace = "TicketService.Proto";
+
+service GrpcTicket {
+    rpc NotifyDeleteTicketEntity (NotifyDeleteTicketRequest) returns (NotifyDeleteTicketResponse);
+}
+
+message NotifyDeleteTicketRequest {
+    repeated int32 carIds = 1 [packed=true];
+}
+
+message NotifyDeleteTicketResponse {}

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ticket-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ticketservice
+  template:
+    metadata:
+      labels:
+        app: ticketservice
+    spec:
+      containers:
+      - name: ticketservice
+        image: dam1591/ticketservice:latest
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tickets-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: ticketservice
+  ports:
+  - name: ticketservice
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: ticketgrpc
+    protocol: TCP
+    port: 60006
+    targetPort: 60006

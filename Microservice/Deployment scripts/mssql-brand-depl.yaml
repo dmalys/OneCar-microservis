@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mssql-brand-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql-brand
+  template:
+    metadata:
+      labels:
+        app: mssql-brand
+    spec:
+      containers:
+        - name: mssql
+          image: mcr.microsoft.com/mssql/server:2017-latest
+          ports:
+            - containerPort: 1434
+          env:
+          - name: MSSQL_PID
+            value: "Express"
+          - name: ACCEPT_EULA
+            value: "Y"
+          - name: MSSQL_DATA_DIR
+            value: /mssql/data
+          - name: SA_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mssql
+                key: SA_PASSWORD
+          volumeMounts:
+          - mountPath: /mssql/data
+            name: db-brand
+      volumes:
+      - name: db-brand
+        persistentVolumeClaim:
+          claimName: brand-local-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-b-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: mssql-brand
+  ports:
+  - name: mssql-brand
+    protocol: TCP
+    port: 1434
+    targetPort: 1434
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-b-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: mssql-brand
+  ports:
+  - protocol: TCP
+    port: 1434
+    targetPort: 1434

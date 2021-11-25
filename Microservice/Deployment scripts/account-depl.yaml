@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: accountservice
+  template:
+    metadata:
+      labels:
+        app: accountservice
+    spec:
+      containers:
+      - name: accountservice
+        image: dam1591/accountservice:latest
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: accounts-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: accountservice
+  ports:
+  - name: accountservice
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: accountgrpc
+    protocol: TCP
+    port: 60005
+    targetPort: 60005

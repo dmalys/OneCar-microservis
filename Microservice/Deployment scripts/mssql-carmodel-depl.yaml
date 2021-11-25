@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mssql-carmodel-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql-carmodel
+  template:
+    metadata:
+      labels:
+        app: mssql-carmodel
+    spec:
+      containers:
+        - name: mssql
+          image: mcr.microsoft.com/mssql/server:2017-latest
+          ports:
+            - containerPort: 1433
+          env:
+          - name: MSSQL_PID
+            value: "Express"
+          - name: ACCEPT_EULA
+            value: "Y"
+          - name: MSSQL_DATA_DIR
+            value: /mssql/data 
+          - name: SA_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mssql
+                key: SA_PASSWORD
+          volumeMounts:
+          - mountPath: /mssql/data
+            name: db-carmodel
+      volumes:
+      - name: db-carmodel
+        persistentVolumeClaim:
+          claimName: carmodel-local-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-cm-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: mssql-carmodel
+  ports:
+  - name: mssql-carmodel
+    protocol: TCP
+    port: 1433
+    targetPort: 1433
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-cm-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: mssql-carmodel
+  ports:
+  - protocol: TCP
+    port: 1433
+    targetPort: 1433

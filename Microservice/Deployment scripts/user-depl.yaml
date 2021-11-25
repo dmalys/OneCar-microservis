@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userservice
+  template:
+    metadata:
+      labels:
+        app: userservice
+    spec:
+      containers:
+      - name: userservice
+        image: dam1591/userservice:latest
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: userservice
+  ports:
+  - name: userservice
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: usergrpc
+    protocol: TCP
+    port: 60007
+    targetPort: 60007

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option csharp_namespace = "CouponService.Proto";
+import "google/protobuf/timestamp.proto";
+
+service GrpcCoupon {
+    rpc NotifyDeleteCouponEntity (NotifyDeleteCouponRequest) returns (NotifyDeleteCouponResponse);
+    rpc GetCouponData (GetCouponDataRequest) returns (GetCouponDataResponse);
+}
+
+message NotifyDeleteCouponRequest {
+    int32 couponId = 1;
+}
+
+message NotifyDeleteCouponResponse {}
+
+message GetCouponDataRequest {
+    string couponCode = 1;
+}
+
+message GetCouponDataResponse {
+    int32 couponId = 1;
+    google.protobuf.Timestamp expirationDate = 2;
+    float moneyValue = 3;
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "AccountService.Proto";
+
+service GrpcAccount {
+    rpc CheckAccountExists (CheckAccountRequest) returns (CheckAccountResponse);
+}
+
+message CheckAccountRequest {
+    int32 accountId = 1;
+}
+
+message CheckAccountResponse {
+    int32 exists = 1;
+}

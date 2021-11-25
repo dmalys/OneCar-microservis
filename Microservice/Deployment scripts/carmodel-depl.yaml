@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: carmodel-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: carmodelservice
+  template:
+    metadata:
+      labels:
+        app: carmodelservice
+    spec:
+      containers:
+      - name: carmodelservice
+        image: dam1591/carmodelservice:latest
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: carmodels-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: carmodelservice
+  ports:
+  - name: carmodelservice
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: carmodelgrpc
+    protocol: TCP
+    port: 60001
+    targetPort: 60001

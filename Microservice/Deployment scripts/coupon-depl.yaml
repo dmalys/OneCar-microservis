@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coupon-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: couponservice
+  template:
+    metadata:
+      labels:
+        app: couponservice
+    spec:
+      containers:
+      - name: couponservice
+        image: dam1591/couponservice:latest
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coupons-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: couponservice
+  ports:
+  - name: couponservice
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: coupongrpc
+    protocol: TCP
+    port: 60004
+    targetPort: 60004

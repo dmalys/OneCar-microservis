@@ -1,0 +1,68 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:
+    - host: dammal.com
+      http:
+        paths:
+          - path: /api/carmodel
+            pathType: Prefix
+            backend:
+              service:
+                name: carmodels-clusterip-srv
+                port:
+                  number: 80
+          - path: /api/brand
+            pathType: Prefix
+            backend:
+              service:
+                name: brands-clusterip-srv
+                port:
+                  number: 80
+          - path: /api/car
+            pathType: Prefix
+            backend:
+              service:
+                name: cars-clusterip-srv
+                port:
+                  number: 80
+          - path: /api/carimage
+            pathType: Prefix
+            backend:
+              service:
+                name: carimages-clusterip-srv
+                port:
+                  number: 80
+          - path: /api/coupon
+            pathType: Prefix
+            backend:
+              service:
+                name: coupons-clusterip-srv
+                port:
+                  number: 80
+          - path: /api/account
+            pathType: Prefix
+            backend:
+              service:
+                name: accounts-clusterip-srv
+                port:
+                  number: 80
+          - path: /api/ticket
+            pathType: Prefix
+            backend:
+              service:
+                name: tickets-clusterip-srv
+                port:
+                  number: 80
+          - path: /api/user
+            pathType: Prefix
+            backend:
+              service:
+                name: users-clusterip-srv
+                port:
+                  number: 80
